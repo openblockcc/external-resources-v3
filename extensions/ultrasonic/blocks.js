@@ -5,7 +5,8 @@ function registerBlocks (Blockly) {
     const color = '#D39DDB';
     const secondaryColour = '#BA55D3';
 
-    const digitalPins = Blockly.Device.getPinOptions('arduino_pin_setDigitalOutput');
+    const outPins = Blockly.Device.getPinOptions('arduino_pin_setDigitalOutput');
+    const inputPins = Blockly.Device.getPinOptions('arduino_pin_readDigitalPin');
 
     Blockly.Blocks.ultrasonic_readDistance = {
         init: function () {
@@ -15,12 +16,12 @@ function registerBlocks (Blockly) {
                     {
                         type: 'field_dropdown',
                         name: 'TRIG',
-                        options: digitalPins
+                        options: outPins
                     },
                     {
                         type: 'field_dropdown',
                         name: 'ECHO',
-                        options: digitalPins
+                        options: inputPins
                     },
                     {
                         type: 'field_dropdown',
