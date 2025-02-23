@@ -5,7 +5,7 @@ const insertSourceCode = formatMessage => ({
     }),
     extensionId: 'insertSourceCode',
     version: '1.0.0',
-    supportDevice: ['arduinoUno', 'arduinoNano', 'arduinoLeonardo',
+    supportDevice: ['*', 'arduinoUno', 'arduinoNano', 'arduinoLeonardo',
         'arduinoMega2560', 'arduinoEsp32', 'arduinoEsp8266'],
     author: 'ArthurZheng',
     iconURL: `assets/insertSourceCode.png`,
