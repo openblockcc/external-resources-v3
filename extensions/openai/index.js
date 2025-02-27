@@ -12,6 +12,7 @@ const openai = formatMessage => ({
         default: 'Allows users to chat with OpenAI, enabling interactive and intelligent conversations.'
     }),
     featured: true,
+    internetConnectionRequired: true,
     main: 'main.js',
     translations: 'translations.js',
     // official: false,

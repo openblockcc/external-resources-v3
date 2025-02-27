@@ -7,20 +7,19 @@ function registerScratchExtension () {
     const formatMessage = _global.Scratch.formatMessage;
     const fetch = _global.fetch;
 
-    const TEMPERATURE = {
-        precise: '0.0',
-        focused: '0.3',
-        balanced: '0.7',
-        creative: '1.2',
-        imaginative: '1.6',
-        unpredictable: '2.0'
+    const Temperature = {
+        VERY_CONSERVATIVE: '0.0',
+        CONSERVATIVE: '0.2',
+        BALANCED: '1',
+        CREATIVE: '1.5',
+        VERY_CREATIVE: '2.0'
     };
 
-    const MODEL = {
-        'gpt-4o': 'gpt-4o',
-        'gpt-4o-mini': 'gpt-4o-mini',
-        'gpt-4': 'gpt-4',
-        'gpt-3.5-turbo': 'gpt-3.5-turbo'
+    const Model = {
+        'GPT_4O': 'gpt-4o',
+        'GPT_4O_MINI': 'gpt-4o-mini',
+        'GPT_4': 'gpt-4',
+        'GPT_3.5_TURBO': 'gpt-3.5-turbo'
     };
 
     /**
@@ -42,28 +41,44 @@ function registerScratchExtension () {
         get TEMPERATURE_MENU () {
             return [
                 {
-                    text: 'precise',
-                    value: TEMPERATURE.precise
+                    text: formatMessage({
+                        id: 'openai.temperature.veryConservative',
+                        default: 'Very Conservative',
+                        description: 'Very conservative response style'
+                    }),
+                    value: Temperature.VERY_CONSERVATIVE
                 },
                 {
-                    text: 'focused',
-                    value: TEMPERATURE.focused
+                    text: formatMessage({
+                        id: 'openai.temperature.conservative',
+                        default: 'Conservative',
+                        description: 'Conservative response style'
+                    }),
+                    value: Temperature.CONSERVATIVE
                 },
                 {
-                    text: 'balanced',
-                    value: TEMPERATURE.balanced
+                    text: formatMessage({
+                        id: 'openai.temperature.balanced',
+                        default: 'Balanced',
+                        description: 'Balanced response style'
+                    }),
+                    value: Temperature.BALANCED
                 },
                 {
-                    text: 'creative',
-                    value: TEMPERATURE.creative
+                    text: formatMessage({
+                        id: 'openai.temperature.creative',
+                        default: 'Creative',
+                        description: 'Creative response style'
+                    }),
+                    value: Temperature.CREATIVE
                 },
                 {
-                    text: 'imaginative',
-                    value: TEMPERATURE.imaginative
-                },
-                {
-                    text: 'unpredictable',
-                    value: TEMPERATURE.unpredictable
+                    text: formatMessage({
+                        id: 'openai.temperature.veryCreative',
+                        default: 'Very Creative',
+                        description: 'Very creative response style'
+                    }),
+                    value: Temperature.VERY_CREATIVE
                 }
             ];
         }
@@ -71,18 +86,20 @@ function registerScratchExtension () {
         get MODEL_MENU () {
             return [
                 {
-                    text: 'gpt-4o',
-                    value: MODEL['gpt-4o']
+                    text: 'GPT-4o',
+                    value: Model.GPT_4O
                 },
                 {
-                    text: 'gpt-4o-mini',
-                    value: MODEL['gpt-4o-mini']
-                }, {
-                    text: 'gpt-4',
-                    value: MODEL['gpt-4']
-                }, {
-                    text: 'gpt-3.5-turbo',
-                    value: MODEL['gpt-3.5-turbo']
+                    text: 'GPT-4o mini',
+                    value: Model.GPT_4O_MINI
+                },
+                {
+                    text: 'GPT-4',
+                    value: Model.GPT_4
+                },
+                {
+                    text: 'GPT-3.5 Turbo',
+                    value: Model['GPT_3.5_TURBO']
                 }
             ];
         }
@@ -94,7 +111,7 @@ function registerScratchExtension () {
         constructor (_runtime) {
             this.runtime = _runtime;
 
-            // this.apiKey = ''; // Default API key and conversation history initialization
+            this.apiKey = '';
             this.conversationHistory = []; // Stores the conversation history to maintain context
         }
 
@@ -122,7 +139,7 @@ function registerScratchExtension () {
                         text: formatMessage({
                             id: 'openai.setApiKey',
                             default: 'set OpenAI API Key to [API_KEY]',
-                            description: 'set OpenAI API key'
+                            description: 'Set OpenAI API key'
                         }),
                         arguments: {
                             API_KEY: {
@@ -132,17 +149,40 @@ function registerScratchExtension () {
                         }
                     },
                     {
-                        opcode: 'generateText',
+                        opcode: 'askOpenAI',
                         blockType: BlockType.REPORTER,
                         text: formatMessage({
-                            id: 'openai.generateText',
+                            id: 'openai.askOpenAI',
                             default: 'ask OpenAI [PROMPT]',
-                            description: 'ask OpenAI'
+                            description: 'Ask OpenAI a question'
                         }),
                         arguments: {
                             PROMPT: {
                                 type: ArgumentType.STRING,
-                                defaultValue: 'Hello, OpenAI!'
+                                defaultValue: formatMessage({
+                                    id: 'openai.askOpenAI.default',
+                                    default: 'Hello, OpenAI!',
+                                    description: 'Default prompt for the askOpenAI block'
+                                })
+                            }
+                        }
+                    },
+                    {
+                        opcode: 'tellOpenAI',
+                        blockType: BlockType.COMMAND,
+                        text: formatMessage({
+                            id: 'openai.tellOpenAI',
+                            default: 'Set the pre-instruction for OpenAI [CONTENT]',
+                            description: 'Set an instruction to be added at the beginning of OpenAI\'s conversation'
+                        }),
+                        arguments: {
+                            CONTENT: {
+                                type: ArgumentType.STRING,
+                                defaultValue: formatMessage({
+                                    id: 'openai.tellOpenAI.default',
+                                    default: 'You are a cute devil bird.',
+                                    description: 'Default content for the tellOpenAI block'
+                                })
                             }
                         }
                     },
@@ -152,7 +192,7 @@ function registerScratchExtension () {
                         text: formatMessage({
                             id: 'openai.clearHistory',
                             default: 'clear conversation history',
-                            description: 'clear openai conversation history'
+                            description: 'Clear openai conversation history'
                         })
                     },
                     '---',
@@ -168,7 +208,7 @@ function registerScratchExtension () {
                             MODEL: {
                                 type: ArgumentType.STRING,
                                 menu: 'model',
-                                defaultValue: MODEL['gpt-4o-mini']
+                                defaultValue: Model.GPT_4O_MINI
                             }
                         }
                     },
@@ -178,13 +218,13 @@ function registerScratchExtension () {
                         text: formatMessage({
                             id: 'openai.setTemperature',
                             default: 'set response style to [STYLE]',
-                            description: 'set openai response style'
+                            description: 'Set openai response style'
                         }),
                         arguments: {
                             STYLE: {
                                 type: ArgumentType.STRING,
                                 menu: 'temperature',
-                                defaultValue: TEMPERATURE.balanced
+                                defaultValue: Temperature.BALANCED
                             }
                         }
                     }
@@ -209,19 +249,31 @@ function registerScratchExtension () {
         }
 
         /**
+         * Sets the content to be remembered or used by OpenAI.
+         * @param {object} args - The block arguments containing the content to be set.
+         */
+        tellOpenAI (args) {
+            this.promoteContent = args.CONTENT;
+        }
+
+        /**
          * Requests a response from OpenAI.
          * @param {object} args - The block arguments
          * @return {Promise<string>} A promise resolving with the response text
          */
-        generateText (args) {
-            return new Promise((resolve, reject) => {
+        askOpenAI (args) {
+            return new Promise(resolve => {
                 if (!this.apiKey) {
-                    reject('API Key is not set');
+                    resolve(formatMessage({
+                        id: 'openai.missingApiKey',
+                        default: 'Oops! It seems like you forgot to set the API Key. Please make sure it\'s set before asking OpenAI.', // eslint-disable-line max-len
+                        description: 'Message shown when API key is missing'
+                    }));
                     return;
                 }
 
                 const prompt = args.PROMPT;
-                const model = this.model || 'gpt-3.5-turbo';
+                const model = this.model || Model['gpt-3.5-turbo'];
                 const temperature = this.temperature || 0.7;
 
                 this.conversationHistory.push({role: 'user', content: prompt});
@@ -233,10 +285,14 @@ function registerScratchExtension () {
                             this.conversationHistory.push({role: 'assistant', content: answer});
                             resolve(answer);
                         } else {
-                            reject('No response');
+                            resolve(formatMessage({
+                                id: 'openai.invalidResponse',
+                                default: 'Something went wrong. OpenAI didn\'t respond as expected. Please try again.',
+                                description: 'Message shown when the response from OpenAI is invalid'
+                            }));
                         }
                     })
-                    .catch(error => reject(`Error fetching OpenAI response: ${error}`));
+                    .catch(error => resolve(error));
             });
         }
 
@@ -245,9 +301,21 @@ function registerScratchExtension () {
          * @param {string} prompt - The user's prompt
          * @param {string} model - The AI model
          * @param {number} temperature - Response randomness level
+         * @param {number} timeout - Timeout duration in milliseconds
          * @return {Promise<object>} A promise resolving with the API response
          */
-        fetchOpenAIResponse (prompt, model, temperature) {
+        fetchOpenAIResponse (prompt, model, temperature, timeout = 5000) {
+            // Prepare the messages array, including the promote content if set
+            const messages = [...this.conversationHistory];
+
+            // Add promoteContent to the beginning of the messages if it exists
+            if (this.promoteContent) {
+                messages.unshift({role: 'system', content: this.promoteContent});
+            }
+
+            // Add the user's prompt to the conversation
+            messages.push({role: 'user', content: prompt});
+
             const url = 'https://api.openai.com/v1/chat/completions';
             const headers = {
                 'Content-Type': 'application/json',
@@ -255,13 +323,36 @@ function registerScratchExtension () {
             };
             const data = {
                 model,
-                messages: [...this.conversationHistory, {role: 'user', content: prompt}],
+                messages,
                 temperature
             };
 
-            return fetch(url, {method: 'POST', headers, body: JSON.stringify(data)})
-                // eslint-disable-next-line no-confusing-arrow
-                .then(response => response.ok ? response.json() : Promise.reject('OpenAI API request failed'));
+            // Create a timeout promise that rejects after the specified duration
+            const timeoutPromise = new Promise((_, reject) =>
+                setTimeout(() => reject(new Error('timeout')), timeout)
+            );
+
+            // Create the fetch promise
+            const fetchPromise = fetch(url, {method: 'POST', headers, body: JSON.stringify(data)})
+                .then(response => {
+                    if (!response.ok) {
+                        return Promise.reject(formatMessage({
+                            id: 'openai.connectionError',
+                            default: 'Something went wrong with the connection. Please check your internet and API key, and try again.', // eslint-disable-line max-len
+                            description: 'Message shown when there is a network or server issue'
+                        }));
+                    }
+                    return response.json();
+                });
+
+            // Race between the fetch promise and the timeout promise
+            return Promise.race([fetchPromise, timeoutPromise])
+                .then(response => response)
+                .catch(() => Promise.reject(formatMessage({
+                    id: 'openai.networkError',
+                    default: 'There seems to be a network issue. Please check your connection and try again.',
+                    description: 'Message shown when there is a network error'
+                })));
         }
 
         /**
