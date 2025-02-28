@@ -10,7 +10,7 @@ function registerScratchExtension () {
     const Temperature = {
         VERY_CONSERVATIVE: '0.0',
         CONSERVATIVE: '0.2',
-        BALANCED: '1',
+        BALANCED: '1.0',
         CREATIVE: '1.5',
         VERY_CREATIVE: '2.0'
     };
@@ -208,7 +208,7 @@ function registerScratchExtension () {
                             MODEL: {
                                 type: ArgumentType.STRING,
                                 menu: 'model',
-                                defaultValue: Model.GPT_4O_MINI
+                                defaultValue: Model.GPT_4O
                             }
                         }
                     },
@@ -273,7 +273,7 @@ function registerScratchExtension () {
                 }
 
                 const prompt = args.PROMPT;
-                const model = this.model || Model['gpt-3.5-turbo'];
+                const model = this.model || Model.GPT_4O;
                 const temperature = this.temperature || 0.7;
 
                 this.conversationHistory.push({role: 'user', content: prompt});
@@ -304,7 +304,7 @@ function registerScratchExtension () {
          * @param {number} timeout - Timeout duration in milliseconds
          * @return {Promise<object>} A promise resolving with the API response
          */
-        fetchOpenAIResponse (prompt, model, temperature, timeout = 5000) {
+        fetchOpenAIResponse (prompt, model, temperature, timeout = 30000) {
             // Prepare the messages array, including the promote content if set
             const messages = [...this.conversationHistory];
 
