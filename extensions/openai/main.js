@@ -113,6 +113,9 @@ function registerScratchExtension () {
 
             this.apiKey = '';
             this.conversationHistory = []; // Stores the conversation history to maintain context
+            this.promoteContent = '';
+            this.model = Model.GPT_4O;
+            this.temperature = 1.0;
         }
 
         /**
@@ -273,18 +276,19 @@ function registerScratchExtension () {
                 }
 
                 const prompt = args.PROMPT;
-                const model = this.model || Model.GPT_4O;
-                const temperature = this.temperature || 0.7;
+                const model = this.model;
+                const temperature = this.temperature;
 
                 this.conversationHistory.push({role: 'user', content: prompt});
 
-                this.fetchOpenAIResponse(prompt, model, temperature)
+                this.fetchOpenAIResponse(model, temperature)
                     .then(response => {
                         if (response && response.choices.length > 0) {
                             const answer = response.choices[0].message.content.trim();
                             this.conversationHistory.push({role: 'assistant', content: answer});
                             resolve(answer);
                         } else {
+                            this.conversationHistory.pop();
                             resolve(formatMessage({
                                 id: 'openai.invalidResponse',
                                 default: 'Something went wrong. OpenAI didn\'t respond as expected. Please try again.',
@@ -292,19 +296,21 @@ function registerScratchExtension () {
                             }));
                         }
                     })
-                    .catch(error => resolve(error));
+                    .catch(error => {
+                        this.conversationHistory.pop();
+                        return resolve(error);
+                    });
             });
         }
 
         /**
          * Fetches a response from OpenAI API.
-         * @param {string} prompt - The user's prompt
          * @param {string} model - The AI model
          * @param {number} temperature - Response randomness level
          * @param {number} timeout - Timeout duration in milliseconds
          * @return {Promise<object>} A promise resolving with the API response
          */
-        fetchOpenAIResponse (prompt, model, temperature, timeout = 30000) {
+        fetchOpenAIResponse (model, temperature, timeout = 30000) {
             // Prepare the messages array, including the promote content if set
             const messages = [...this.conversationHistory];
 
@@ -312,9 +318,6 @@ function registerScratchExtension () {
             if (this.promoteContent) {
                 messages.unshift({role: 'system', content: this.promoteContent});
             }
-
-            // Add the user's prompt to the conversation
-            messages.push({role: 'user', content: prompt});
 
             const url = 'https://api.openai.com/v1/chat/completions';
             const headers = {

@@ -103,6 +103,9 @@ function registerScratchExtension () {
 
             this.apiKey = '';
             this.conversationHistory = []; // Stores the conversation history to maintain context
+            this.promoteContent = '';
+            this.model = Model.DEEPSEEK_CHAT;
+            this.temperature = 1.0;
         }
 
         /**
@@ -263,18 +266,19 @@ function registerScratchExtension () {
                 }
 
                 const prompt = args.PROMPT;
-                const model = this.model || Model.DEEPSEEK_CHAT;
-                const temperature = this.temperature || 0.7;
+                const model = this.model;
+                const temperature = this.temperature;
 
                 this.conversationHistory.push({role: 'user', content: prompt});
 
-                this.fetchDeepSeekResponse(prompt, model, temperature)
+                this.fetchDeepSeekResponse(model, temperature)
                     .then(response => {
                         if (response && response.choices.length > 0) {
                             const answer = response.choices[0].message.content.trim();
                             this.conversationHistory.push({role: 'assistant', content: answer});
                             resolve(answer);
                         } else {
+                            this.conversationHistory.pop();
                             resolve(formatMessage({
                                 id: 'deepseek.invalidResponse',
                                 default: 'Something went wrong. DeepSeek didn\'t respond as expected. Please try again.', // eslint-disable-line max-len
@@ -282,19 +286,21 @@ function registerScratchExtension () {
                             }));
                         }
                     })
-                    .catch(error => resolve(error));
+                    .catch(error => {
+                        this.conversationHistory.pop();
+                        return resolve(error);
+                    });
             });
         }
 
         /**
          * Fetches a response from DeepSeek API.
-         * @param {string} prompt - The user's prompt
          * @param {string} model - The AI model
          * @param {number} temperature - Response randomness level
          * @param {number} timeout - Timeout duration in milliseconds
          * @return {Promise<object>} A promise resolving with the API response
          */
-        fetchDeepSeekResponse (prompt, model, temperature, timeout = 30000) {
+        fetchDeepSeekResponse (model, temperature, timeout = 30000) {
             // Prepare the messages array, including the promote content if set
             const messages = [...this.conversationHistory];
 
@@ -302,9 +308,6 @@ function registerScratchExtension () {
             if (this.promoteContent) {
                 messages.unshift({role: 'system', content: this.promoteContent});
             }
-
-            // Add the user's prompt to the conversation
-            messages.push({role: 'user', content: prompt});
 
             const url = 'https://api.deepseek.com/chat/completions';
             const headers = {
