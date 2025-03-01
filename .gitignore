@@ -12,3 +12,7 @@ node_modules/
 
 # Packaged files
 dist/
+
+# arduino staging and packages folders
+devices/*/arduinoData/packages
+devices/*/arduinoData/staging
