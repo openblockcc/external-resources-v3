@@ -1,33 +1,50 @@
-// eslint-disable-next-line func-style, require-jsdoc
-function registerScratchExtension () {
+/**
+ * Registers the Scratch extension for ultrasonic sensor functionality.
+ * @return {class} The OpenBlockUltrasonicBlocks class.
+ */
+const registerScratchExtension = () => {
+    // Determine the global object based on the environment (Node.js or browser).
     const _global = (typeof global === 'undefined') ? window : global; // eslint-disable-line no-undef, max-len
 
+    // Import required Scratch modules from the global object.
     const BlockType = _global.Scratch.BlockType;
     const ArgumentType = _global.Scratch.ArgumentType;
     const formatMessage = _global.Scratch.formatMessage;
 
+    /**
+     * Enum for unit types used in the ultrasonic sensor.
+     * @enum {string}
+     */
     const UNIT = {
-        cm: 'CM',
-        inc: 'INC'
+        cm: 'CM', // Centimeters
+        inc: 'INC' // Inches
     };
 
     /**
-     * Scratch 3.0 blocks to interact with a peripheral.
+     * Scratch 3.0 blocks to interact with an ultrasonic sensor peripheral.
      */
     class OpenBlockUltrasonicBlocks {
 
         /**
          * The ID of the extension.
-         * @return {string} the id
+         * @return {string} the ID of the extension.
          */
         get EXTENSION_ID () {
             return 'ultrasonic';
         }
 
+        /**
+         * Returns the pins menu from the device instance.
+         * @return {Array.<object>} The pins menu items.
+         */
         get PINS_MENU () {
             return this.deviceInstance.PINS_MENU;
         }
 
+        /**
+         * Returns the unit menu for distance measurement.
+         * @return {Array.<object>} The unit menu items.
+         */
         get UNIT_MENU () {
             return [
                 {
@@ -42,9 +59,9 @@ function registerScratchExtension () {
         }
 
         /**
-         * Construct a MicroBit communication object.
-         * @param {Runtime} _runtime - the Scratch 3.0 runtime
-         * @param {DeviceInstance} _deviceInstance - the device instance currently running on the virtual machine
+         * Constructs an OpenBlockUltrasonicBlocks instance.
+         * @param {Runtime} _runtime - The Scratch 3.0 runtime.
+         * @param {DeviceInstance} _deviceInstance - The device instance currently running on the virtual machine.
          */
         constructor (_runtime, _deviceInstance) {
             /**
@@ -60,10 +77,18 @@ function registerScratchExtension () {
             this.deviceInstance = _deviceInstance;
         }
 
+        /**
+         * Returns the peripheral instance associated with the device.
+         * @return {object} The peripheral instance.
+         */
         get _peripheral () {
             return this.deviceInstance._peripheral;
         }
 
+        /**
+         * Returns the metadata for this extension and its blocks.
+         * @return {object} The extension metadata.
+         */
         getInfo () {
             return [{
                 id: 'ultrasonic',
@@ -116,6 +141,11 @@ function registerScratchExtension () {
             }];
         }
 
+        /**
+         * Reads the distance from the ultrasonic sensor.
+         * @param {object} args - The block arguments.
+         * @return {Promise} A promise that resolves with the distance value.
+         */
         readDistance (args) {
             let unit = 0;
             if (args.UNIT === UNIT.inc) {
@@ -131,6 +161,6 @@ function registerScratchExtension () {
     }
 
     return OpenBlockUltrasonicBlocks;
-}
+};
 
 exports = registerScratchExtension;
