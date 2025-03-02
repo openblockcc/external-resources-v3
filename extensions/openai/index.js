@@ -15,7 +15,7 @@ const openai = formatMessage => ({
     internetConnectionRequired: true,
     main: 'main.js',
     translations: 'translations.js',
-    // official: false,
+    official: true,
     tags: ['other'],
     helpLink: 'https://wiki.openblock.cc'
 });
