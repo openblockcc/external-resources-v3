@@ -2,7 +2,7 @@
  * Registers the Scratch extension for ultrasonic sensor functionality.
  * @return {class} The OpenBlockUltrasonicBlocks class.
  */
-const registerScratchExtension = () => {
+function registerScratchExtension () { // eslint-disable-line func-style
     // Determine the global object based on the environment (Node.js or browser).
     const _global = (typeof global === 'undefined') ? window : global; // eslint-disable-line no-undef, max-len
 
@@ -161,6 +161,6 @@ const registerScratchExtension = () => {
     }
 
     return OpenBlockUltrasonicBlocks;
-};
+}
 
 exports = registerScratchExtension;

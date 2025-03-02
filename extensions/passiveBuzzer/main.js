@@ -2,7 +2,7 @@
  * Registers the Scratch extension for passive buzzer functionality.
  * @return {class} The OpenBlockPassiveBuzzerBlocks class.
  */
-const registerScratchExtension = () => {
+function registerScratchExtension () { // eslint-disable-line func-style
     // Determine the global object based on the environment (Node.js or browser).
     const _global = (typeof global === 'undefined') ? window : global; // eslint-disable-line no-undef, max-len
 
@@ -556,7 +556,7 @@ const registerScratchExtension = () => {
                             PIN: {
                                 type: ArgumentType.STRING,
                                 menu: 'outPins',
-                                defaultValue: this.PINS_MENU[0].value
+                                defaultValue: this.PINS_MENU[2].value
                             }
                         }
                     },
@@ -729,6 +729,6 @@ const registerScratchExtension = () => {
     }
 
     return OpenBlockPassiveBuzzerBlocks;
-};
+}
 
 exports = registerScratchExtension;
