@@ -1,6 +1,17 @@
 @echo off
 setlocal enabledelayedexpansion
 
+:: Check for administrator privileges
+net session >nul 2>&1
+if %errorLevel% neq 0 (
+    echo.
+    echo ERROR: This script must be run as an administrator!
+    echo Please right-click the script and select "Run as administrator".
+    echo.
+    pause
+    exit /b
+)
+
 :: Get the directory where the current script is located
 set "INSTALL_DIR=%~dp0"
 
