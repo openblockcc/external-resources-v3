@@ -6,7 +6,7 @@ const eitghtTimesEightMatirxDisplay = formatMessage => ({
     extensionId: 'eitghtTimesEightMatirxDisplay',
     version: '1.0.0',
     supportDevice: ['arduinoUno', 'arduinoNano', 'arduinoLeonardo',
-        'arduinoMega2560', 'arduinoEsp8266', 'arduinoEsp32'],
+        'arduinoMega2560', 'arduinoEsp8266', 'arduinoEsp32', 'lgt8f328pNano'],
     author: 'ArthurZheng',
     iconURL: `assets/eitghtTimesEightMatirxDisplay.png`,
     description: formatMessage({

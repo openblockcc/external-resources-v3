@@ -3,7 +3,7 @@ const l298n = formatMessage => ({
     extensionId: 'l298n',
     version: '1.0.0',
     supportDevice: ['arduinoUno', 'arduinoNano', 'arduinoLeonardo',
-        'arduinoMega2560', 'arduinoEsp8266'],
+        'arduinoMega2560', 'arduinoEsp8266', 'lgt8f328pNano'],
     author: 'Liang',
     iconURL: `assets/l298n.png`,
     description: formatMessage({

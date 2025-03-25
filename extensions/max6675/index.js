@@ -6,7 +6,7 @@ const max6675 = formatMessage => ({
     extensionId: 'max6675',
     version: '1.0.0',
     supportDevice: ['arduinoUno', 'arduinoNano', 'arduinoLeonardo',
-        'arduinoMega2560', 'arduinoEsp32', 'arduinoEsp8266'],
+        'arduinoMega2560', 'arduinoEsp32', 'arduinoEsp8266', 'lgt8f328pNano'],
     author: 'ArthurZheng',
     iconURL: `assets/max6675.png`,
     description: formatMessage({

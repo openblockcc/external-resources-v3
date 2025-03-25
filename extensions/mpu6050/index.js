@@ -6,7 +6,7 @@ const mpu6050 = formatMessage => ({
     extensionId: 'mpu6050',
     version: '1.0.0',
     supportDevice: ['arduinoUno', 'arduinoNano', 'arduinoLeonardo',
-        'arduinoMega2560', 'arduinoEsp32', 'arduinoEsp8266'],
+        'arduinoMega2560', 'arduinoEsp32', 'arduinoEsp8266', 'lgt8f328pNano'],
     author: 'ArthurZheng',
     iconURL: `assets/mpu6050.png`,
     description: formatMessage({

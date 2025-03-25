@@ -5,7 +5,7 @@ const cooperativeScheduler = formatMessage => ({
     }),
     extensionId: 'cooperativeScheduler',
     version: '1.0.0',
-    supportDevice: ['arduinoUno', 'arduinoNano', 'arduinoLeonardo', 'arduinoMega2560'],
+    supportDevice: ['arduinoUno', 'arduinoNano', 'arduinoLeonardo', 'arduinoMega2560', 'lgt8f328pNano'],
     author: 'ArthurZheng',
     iconURL: `assets/cooperativeScheduler.png`,
     description: formatMessage({

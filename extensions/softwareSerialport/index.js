@@ -5,7 +5,7 @@ const softwareSerial = formatMessage => ({
     }),
     extensionId: 'softwareSerial',
     version: '1.0.0',
-    supportDevice: ['arduinoUno', 'arduinoNano', 'arduinoLeonardo', 'arduinoMega2560'],
+    supportDevice: ['arduinoUno', 'arduinoNano', 'arduinoLeonardo', 'arduinoMega2560', 'lgt8f328pNano'],
     author: 'ArthurZheng',
     iconURL: `assets/softwareSerial.png`,
     description: formatMessage({

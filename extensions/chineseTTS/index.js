@@ -6,7 +6,7 @@ const chineseTTS = formatMessage => ({
     extensionId: 'chineseTTS',
     version: '1.0.0',
     supportDevice: ['arduinoUno', 'arduinoNano', 'arduinoLeonardo',
-        'arduinoMega2560', 'arduinoEsp32', 'arduinoEsp8266'],
+        'arduinoMega2560', 'arduinoEsp32', 'arduinoEsp8266', 'lgt8f328pNano'],
     author: 'ArthurZheng',
     iconURL: `assets/chineseTTS.png`,
     description: formatMessage({
