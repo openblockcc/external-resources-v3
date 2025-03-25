@@ -5,8 +5,8 @@ const lcd = formatMessage => ({
     }),
     extensionId: 'lcdks',
     version: '1.0.0',
-    supportDevice: ['arduinoUno', 'arduinoNano', 'arduinoLeonardo',
-        'arduinoMega2560', 'arduinoEsp8266', 'arduinoEsp32'],
+    supportDevice: ['arduinoUno', 'arduinoLeonardo',
+        'arduinoMega2560'],
     author: 'Kautism',
     iconURL: `assets/lcd_keypad_shield.png`,
     description: formatMessage({

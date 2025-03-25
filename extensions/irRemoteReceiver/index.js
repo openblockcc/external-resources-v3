@@ -6,7 +6,7 @@ const irRemoteReceiver = formatMessage => ({
     extensionId: 'irRemoteReceiver',
     version: '1.0.0',
     supportDevice: ['arduinoUno', 'arduinoNano', 'arduinoLeonardo',
-        'arduinoMega2560', 'arduinoEsp32', 'arduinoEsp8266'],
+        'arduinoMega2560', 'arduinoEsp32', 'arduinoEsp8266', 'lgt8f328pNano'],
     author: 'ArthurZheng',
     iconURL: `assets/irRemoteReceiver.png`,
     description: formatMessage({
