@@ -14,6 +14,8 @@ jobs:
       id: ${{ steps.create_release.outputs.id }}
     steps:
       - uses: actions/checkout@v4
+        with:
+            submodules: true
 
       - uses: actions/setup-node@v4
         with:
@@ -23,6 +25,8 @@ jobs:
 
       - name: Pre-process resources
         run: |
+          npm ci
+          npm run build
           gen-config --version=${{ github.ref_name }}
 
       - name: Get version
@@ -33,7 +37,7 @@ jobs:
 
       - name: Clear Unused files
         run: |
-          rm -r .git .github buildResources
+          rm -rf .git .github buildResources
 
       - name: Zip resources
         uses: vimtor/action-zip@v1
