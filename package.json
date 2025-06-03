@@ -1,6 +1,7 @@
 {
   "scripts": {
     "start": "",
+    "build": "node buildResources/build.js",
     "i18n-extract": "rimraf translations && i18n-extract",
     "i18n-push": "i18n-push",
     "i18n-update": "i18n-update",
@@ -13,6 +14,9 @@
     "babel-eslint": "^10.0.1",
     "eslint": "^5.3.0",
     "eslint-config-scratch": "^5.0.0",
-    "openblock-resource": "^0.2.0-prerelease.20250302101433"
+    "iconv-lite": "^0.6.3",
+    "openblock-resource": "^0.2.0-prerelease.20250302101433",
+    "webpack": "^4.47.0",
+    "webpack-cli": "^3.3.12"
   }
 }

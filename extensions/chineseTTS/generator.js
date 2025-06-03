@@ -1,6 +1,9 @@
 /* eslint-disable func-style */
 /* eslint-disable max-len */
 /* eslint-disable require-jsdoc */
+// @webpack-build
+const iconv = require('iconv-lite');
+
 function registerGenerators (Blockly) {
     Blockly.Arduino.chineseTTS_init = function (block) {
         const tx = block.getFieldValue('TX');
@@ -17,7 +20,7 @@ function registerGenerators (Blockly) {
 
     Blockly.Arduino.chineseTTS_say = function (block) {
         const text = Blockly.Arduino.valueToCode(block, 'TEXT', Blockly.Arduino.ORDER_ATOMIC).slice(1, -1);
-        const gbkCode = Blockly.iconv.encode(text, 'gbk');
+        const gbkCode = iconv.encode(text, 'gbk');
         const gbkArray = toHexForm(gbkCode);
         const variableName = toVariableName(gbkCode);
 
@@ -28,7 +31,7 @@ function registerGenerators (Blockly) {
 
     Blockly.Arduino.chineseTTS_sayUntillFinish = function (block) {
         const text = Blockly.Arduino.valueToCode(block, 'TEXT', Blockly.Arduino.ORDER_ATOMIC).slice(1, -1);
-        const gbkCode = Blockly.iconv.encode(text, 'gbk');
+        const gbkCode = iconv.encode(text, 'gbk');
         const gbkArray = toHexForm(gbkCode);
         const variableName = toVariableName(gbkCode);
 
@@ -71,4 +74,6 @@ function registerGenerators (Blockly) {
     return Blockly;
 }
 
-exports = registerGenerators;
+if (typeof window !== 'undefined') {
+    window.registerGenerators = registerGenerators;
+}

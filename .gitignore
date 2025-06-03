@@ -16,3 +16,6 @@ dist/
 # arduino staging and packages folders
 devices/*/arduinoData/packages
 devices/*/arduinoData/staging
+
+# Webpack dists
+*.bundle.js

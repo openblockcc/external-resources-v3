@@ -15,7 +15,7 @@ const chineseTTS = formatMessage => ({
     }),
     featured: true,
     blocks: 'blocks.js',
-    generator: 'generator.js',
+    generator: 'generator.bundle.js',
     toolbox: 'toolbox.js',
     translations: 'translations.js',
     library: 'lib',
