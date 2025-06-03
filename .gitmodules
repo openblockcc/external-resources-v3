@@ -1,0 +1,3 @@
+[submodule "extensions/ps2/lib/Arduino-PS2X-ESP32"]
+	path = extensions/ps2/lib/Arduino-PS2X-ESP32
+	url = https://github.com/MyArduinoLib/Arduino-PS2X-ESP32.git
