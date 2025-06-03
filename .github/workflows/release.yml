@@ -104,7 +104,7 @@ jobs:
       - name: Install Inno Setup
         shell: powershell
         run: |
-            choco install innosetup
+            choco install innosetup --version=5.6.1
 
       - name: Get version
         id: get-version
@@ -116,7 +116,7 @@ jobs:
       - name: Build Installer
         shell: powershell
         run: |
-            & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" /dVersion="${{ steps.get-version.outputs.VERSION }}" "./buildResources/setup.iss"
+            & "C:\Program Files (x86)\Inno Setup 5\ISCC.exe" /dVersion="${{ steps.get-version.outputs.VERSION }}" "./buildResources/setup.iss"
 
       - name: Upload to Release
         uses: xresloader/upload-to-github-release@v1
