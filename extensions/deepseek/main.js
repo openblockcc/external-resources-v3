@@ -1,11 +1,10 @@
 // eslint-disable-next-line func-style, require-jsdoc
 function registerScratchExtension () {
-    const _global = (typeof global === 'undefined') ? window : global; // eslint-disable-line no-undef, max-len
-
-    const BlockType = _global.Scratch.BlockType;
-    const ArgumentType = _global.Scratch.ArgumentType;
-    const formatMessage = _global.Scratch.formatMessage;
-    const fetch = _global.fetch;
+    const BlockType = window.Scratch.BlockType;
+    const ArgumentType = window.Scratch.ArgumentType;
+    const formatMessage = window.Scratch.formatMessage;
+    const ProgramModeType = window.Scratch.ProgramModeType;
+    const fetch = window.fetch;
 
     const Temperature = {
         VERY_CONSERVATIVE: '0.0',
@@ -139,7 +138,8 @@ function registerScratchExtension () {
                                 type: ArgumentType.STRING,
                                 defaultValue: 'DEEPSEEK_API_KEY'
                             }
-                        }
+                        },
+                        programMode: [ProgramModeType.REALTIME]
                     },
                     {
                         opcode: 'askDeepSeek',
@@ -158,7 +158,8 @@ function registerScratchExtension () {
                                     description: 'Default prompt for the askDeepSeek block'
                                 })
                             }
-                        }
+                        },
+                        programMode: [ProgramModeType.REALTIME]
                     },
                     {
                         opcode: 'tellDeepSeek',
@@ -177,7 +178,8 @@ function registerScratchExtension () {
                                     description: 'Default content for the tellDeepSeek block'
                                 })
                             }
-                        }
+                        },
+                        programMode: [ProgramModeType.REALTIME]
                     },
                     {
                         opcode: 'clearHistory',
@@ -186,7 +188,8 @@ function registerScratchExtension () {
                             id: 'deepseek.clearHistory',
                             default: 'clear conversation history',
                             description: 'Clear DeepSeek conversation history'
-                        })
+                        }),
+                        programMode: [ProgramModeType.REALTIME]
                     },
                     '---',
                     {
@@ -203,7 +206,8 @@ function registerScratchExtension () {
                                 menu: 'model',
                                 defaultValue: Model.DEEPSEEK_CHAT
                             }
-                        }
+                        },
+                        programMode: [ProgramModeType.REALTIME]
                     },
                     {
                         opcode: 'setTemperature',
@@ -219,7 +223,8 @@ function registerScratchExtension () {
                                 menu: 'temperature',
                                 defaultValue: Temperature.BALANCED
                             }
-                        }
+                        },
+                        programMode: [ProgramModeType.REALTIME]
                     }
                 ],
                 menus: {

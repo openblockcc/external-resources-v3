@@ -1,11 +1,10 @@
 // eslint-disable-next-line func-style, require-jsdoc
 function registerScratchExtension () {
-    const _global = (typeof global === 'undefined') ? window : global; // eslint-disable-line no-undef, max-len
-
-    const BlockType = _global.Scratch.BlockType;
-    const ArgumentType = _global.Scratch.ArgumentType;
-    const formatMessage = _global.Scratch.formatMessage;
-    const fetch = _global.fetch;
+    const BlockType = window.Scratch.BlockType;
+    const ArgumentType = window.Scratch.ArgumentType;
+    const formatMessage = window.Scratch.formatMessage;
+    const ProgramModeType = window.Scratch.ProgramModeType;
+    const fetch = window.fetch;
 
     const Temperature = {
         VERY_CONSERVATIVE: '0.0',
@@ -149,7 +148,8 @@ function registerScratchExtension () {
                                 type: ArgumentType.STRING,
                                 defaultValue: 'OPENAI_API_KEY'
                             }
-                        }
+                        },
+                        programMode: [ProgramModeType.REALTIME]
                     },
                     {
                         opcode: 'askOpenAI',
@@ -168,7 +168,8 @@ function registerScratchExtension () {
                                     description: 'Default prompt for the askOpenAI block'
                                 })
                             }
-                        }
+                        },
+                        programMode: [ProgramModeType.REALTIME]
                     },
                     {
                         opcode: 'tellOpenAI',
@@ -187,7 +188,8 @@ function registerScratchExtension () {
                                     description: 'Default content for the tellOpenAI block'
                                 })
                             }
-                        }
+                        },
+                        programMode: [ProgramModeType.REALTIME]
                     },
                     {
                         opcode: 'clearHistory',
@@ -196,7 +198,8 @@ function registerScratchExtension () {
                             id: 'openai.clearHistory',
                             default: 'clear conversation history',
                             description: 'Clear openai conversation history'
-                        })
+                        }),
+                        programMode: [ProgramModeType.REALTIME]
                     },
                     '---',
                     {
@@ -213,7 +216,8 @@ function registerScratchExtension () {
                                 menu: 'model',
                                 defaultValue: Model.GPT_4O
                             }
-                        }
+                        },
+                        programMode: [ProgramModeType.REALTIME]
                     },
                     {
                         opcode: 'setTemperature',
@@ -229,7 +233,8 @@ function registerScratchExtension () {
                                 menu: 'temperature',
                                 defaultValue: Temperature.BALANCED
                             }
-                        }
+                        },
+                        programMode: [ProgramModeType.REALTIME]
                     }
                 ],
                 menus: {
