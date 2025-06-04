@@ -42,6 +42,15 @@ function registerScratchExtension () { // eslint-disable-line func-style
         }
 
         /**
+         * Returns the pins menu from the device instance.
+         * @return {Array.<object>} The out pins menu items.
+         */
+        get OUT_PINS_MENU () {
+            return this.deviceInstance.OUT_PINS_MENU ?? this.deviceInstance.PINS_MENU;
+        }
+
+
+        /**
          * Returns the unit menu for distance measurement.
          * @return {Array.<object>} The unit menu items.
          */
@@ -114,13 +123,13 @@ function registerScratchExtension () { // eslint-disable-line func-style
                         arguments: {
                             TRIG: {
                                 type: ArgumentType.STRING,
-                                menu: 'pins',
-                                defaultValue: this.PINS_MENU[2].value
+                                menu: 'outPins',
+                                defaultValue: this.OUT_PINS_MENU[2].value
                             },
                             ECHO: {
                                 type: ArgumentType.STRING,
                                 menu: 'pins',
-                                defaultValue: this.PINS_MENU[3].value
+                                defaultValue: this.OUT_PINS_MENU[3].value
                             },
                             UNIT: {
                                 type: ArgumentType.STRING,
@@ -133,6 +142,9 @@ function registerScratchExtension () { // eslint-disable-line func-style
                 menus: {
                     pins: {
                         items: this.PINS_MENU
+                    },
+                    outPins: {
+                        items: this.OUT_PINS_MENU
                     },
                     unit: {
                         items: this.UNIT_MENU
