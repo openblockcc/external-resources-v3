@@ -18,7 +18,7 @@ SOURCE_DIR="./"
 BUILD_DIR="dist/pkg"
 INSTALL_DIR="opt/OpenBlockExternalResources"
 
-PKGIGNORE_FILE=".pkgignore"
+PKGIGNORE_FILE="./buildResources/.pkgignore"
 EXCLUDE_PARAMS=()
 
 if [ -f "$PKGIGNORE_FILE" ]; then
