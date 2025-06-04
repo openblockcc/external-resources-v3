@@ -108,7 +108,7 @@ jobs:
       - name: Install Inno Setup
         shell: powershell
         run: |
-            choco install innosetup --version=5.6.1
+            choco install innosetup --version=5.6.1 --allow-downgrade
 
       - name: Get version
         id: get-version
