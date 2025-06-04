@@ -4,11 +4,11 @@ setlocal enabledelayedexpansion
 :: Check for administrator privileges
 net session >nul 2>&1
 if %errorLevel% neq 0 (
-    echo.
-    echo ERROR: This script must be run as an administrator!
-    echo Please right-click the script and select "Run as administrator".
-    echo.
-    pause
+    :: If we are not an administrator, use VBS to elevate permissions
+    echo Set UAC = CreateObject^("Shell.Application"^) > "%temp%\getadmin.vbs"
+    echo UAC.ShellExecute "%~fs0", "", "", "runas", 1 >> "%temp%\getadmin.vbs"
+    "%temp%\getadmin.vbs"
+    del "%temp%\getadmin.vbs"
     exit /b
 )
 

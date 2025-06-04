@@ -7,7 +7,7 @@ AppVersion={#Version}
 DefaultDirName=C:\OpenBlockExternalResources
 OutputDir=../dist
 OutputBaseFilename=OpenBlock-External-Resources-v{#Version}
-PrivilegesRequired=admin
+PrivilegesRequired=lowest
 
 [Files]
 Source: "../*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs; Excludes: ".git, .github, .DS_Store, translations, node_modules, buildResources, dist"
