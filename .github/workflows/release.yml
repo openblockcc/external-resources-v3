@@ -37,7 +37,7 @@ jobs:
 
       - name: Clear Unused files
         run: |
-          rm -rf .git .github buildResources
+          rm -rf .git .github .DS_Store translations node_modules buildResources dist
 
       - name: Zip resources
         uses: vimtor/action-zip@v1
