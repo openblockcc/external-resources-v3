@@ -37,7 +37,6 @@ if [[ "$(uname)" == "Darwin" ]]; then
 EOF
 
     launchctl setenv OPENBLOCK_EXTERNAL_RESOURCES "$INSTALL_DIR"
-    echo
     echo "Environment variable OPENBLOCK_EXTERNAL_RESOURCES has been set to: $INSTALL_DIR"
 else
     display_restart_dialog() {
@@ -68,7 +67,7 @@ else
 fi
 
 echo
-echo "Installation completed in $INSTALL_DIR"
+echo "Installation completed."
 
 if [[ "$interactive_mode" == true && "$(uname)" == "Darwin" ]]; then
     echo "Press Enter to exit..."
