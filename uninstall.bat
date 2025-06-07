@@ -1,12 +1,18 @@
 @echo off
 setlocal enabledelayedexpansion
 
+:: Check for --non-interactive argument
+set NON_INTERACTIVE=false
+for %%A in (%*) do (
+    if /I "%%A"=="--non-interactive" set NON_INTERACTIVE=true
+)
+
 :: Check for administrator privileges
 net session >nul 2>&1
 if %errorLevel% neq 0 (
     :: If not running as administrator, request elevation
     echo Set UAC = CreateObject^("Shell.Application"^) > "%temp%\getadmin.vbs"
-    echo UAC.ShellExecute "%~fs0", "", "", "runas", 1 >> "%temp%\getadmin.vbs"
+    echo UAC.ShellExecute "%~fs0", "%*", "", "runas", 1 >> "%temp%\getadmin.vbs"
     "%temp%\getadmin.vbs"
     del "%temp%\getadmin.vbs"
     exit /b
@@ -24,6 +30,9 @@ if %errorlevel% equ 0 (
 )
 
 echo.
-echo Uninstallation cleanup completed.
-echo Press any key to exit...
-pause >nul
+echo Uninstallation completed.
+
+if /I "%NON_INTERACTIVE%"=="false" (
+    echo Press any key to exit...
+    pause >nul
+)

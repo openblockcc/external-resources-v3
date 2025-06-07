@@ -13,7 +13,7 @@ PrivilegesRequired=lowest
 Source: "../*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs; Excludes: ".git, .github, .DS_Store, translations, node_modules, buildResources, dist"
 
 [Run]
-Filename: "{app}\setup.bat";
+Filename: "{app}\setup.bat"; Parameters: "--non-interactive"
 
 [UninstallRun]
-Filename: "{app}\uninstall.bat"; Flags: runhidden runasoriginaluser; RunOnceId: cleanup_openblock_env
+Filename: "{app}\uninstall.bat"; Parameters: "--non-interactive"; Flags: runhidden runasoriginaluser; RunOnceId: cleanup_openblock_env
