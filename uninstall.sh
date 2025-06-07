@@ -1,62 +1,63 @@
 #!/bin/bash
 
-# Check if this script is being sourced or directly executed
-if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
-    interactive_mode=true
-else
+# Default interactive mode
+interactive_mode=true
+
+# If passed --non-interactive, disable interactive prompts
+if [[ "$1" == "--non-interactive" ]]; then
     interactive_mode=false
 fi
 
-# Check if the system is macOS
+# Get the directory where the current script is located
+INSTALL_DIR="$(cd "$(dirname "$0")" && pwd -P)"
+
+# Uninstall procedure
 if [[ "$(uname)" == "Darwin" ]]; then
+    LAUNCH_AGENT_PLIST="$HOME/Library/LaunchAgents/openblock.cc.openblockExternalResource.setenv.plist"
 
-    LAUNCH_AGENT_PLIST=/Library/LaunchAgents/openblock.cc.openblockExternalResource.setenv.plist
-
-    if [ -f "$LAUNCH_AGENT_PLIST" ]; then
-        echo "Removing LaunchAgent plist: $LAUNCH_AGENT_PLIST"
-        sudo rm "$LAUNCH_AGENT_PLIST"
+    if [[ -f "$LAUNCH_AGENT_PLIST" ]]; then
+        echo "Removing LaunchAgent plist file: $LAUNCH_AGENT_PLIST"
+        rm -f "$LAUNCH_AGENT_PLIST"
     else
-        echo "LaunchAgent plist not found: $LAUNCH_AGENT_PLIST"
+        echo "LaunchAgent plist file not found: $LAUNCH_AGENT_PLIST"
     fi
 
-    # Prompt for restart
-    osascript <<EOF
-tell application "System Events"
-    activate
-    display dialog "The uninstallation is complete. To fully remove the environment variable, please restart your computer." buttons {"Restart Now", "Later"} default button "Later" with icon caution
-    set userChoice to button returned of result
-    if userChoice is "Restart Now" then
-        tell application "System Events" to restart
-    end if
-end tell
-EOF
+    # Unset the environment variable for current session
+    echo "Unsetting environment variable OPENBLOCK_EXTERNAL_RESOURCES for current session"
+    launchctl unsetenv OPENBLOCK_EXTERNAL_RESOURCES
+
+    echo
+    echo "Uninstallation completed."
 
 else
+    display_restart_dialog() {
+        echo
+        echo "The uninstallation is complete. To fully remove the environment variable, please restart your computer or log out and log in again."
+        read -p "Do you want to restart now? [y/N]: " choice
+        if [[ "$choice" =~ ^[Yy]$ ]]; then
+            sudo shutdown -r now
+        fi
+    }
+
     PROFILE_FILE="/etc/profile.d/openblock-external-resource-setenv.sh"
 
-    if [ -f "$PROFILE_FILE" ]; then
-        echo "Removing environment variable script: $PROFILE_FILE"
-        sudo rm "$PROFILE_FILE"
+    if [[ -f "$PROFILE_FILE" ]]; then
+        echo "Removing profile script: $PROFILE_FILE"
+        sudo rm -f "$PROFILE_FILE"
     else
-        echo "Environment variable script not found: $PROFILE_FILE"
+        echo "Profile script not found: $PROFILE_FILE"
     fi
 
-    # Restart prompt for Linux
-    zenity --question --text="The uninstallation is complete. Please restart your computer to fully remove the environment variable." \
-    --title="Restart Required" --ok-label="Restart Now" --cancel-label="Later" --width=400
-
-    if [ $? -eq 0 ]; then
-        sudo shutdown -r now
+    if [[ $interactive_mode == true ]]; then
+        display_restart_dialog
     else
-        echo "You chose to restart later."
+        echo
+        echo "Please reboot or log out and log in again to fully remove the environment variable."
+        echo "Uninstallation completed."
     fi
 fi
 
-echo
-echo "Uninstallation completed."
-
-# Optional: Pause if in interactive mode
-if [[ $interactive_mode == true ]]; then
+if [[ "$interactive_mode" == true && "$(uname)" == "Darwin" ]]; then
     echo "Press Enter to exit..."
     read -r
 fi

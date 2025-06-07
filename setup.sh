@@ -1,10 +1,11 @@
 #!/bin/bash
 
-# Check if this script is being sourced or directly executed
-if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
-    interactive_mode=true  # This script is being directly executed
-else
-    interactive_mode=false  # This script is being sourced or included
+# Default interactive mode
+interactive_mode=true
+
+# If passed --non-interactive, disable interactive prompts
+if [[ "$1" == "--non-interactive" ]]; then
+    interactive_mode=false
 fi
 
 # Get the directory where the current script is located
@@ -12,12 +13,9 @@ INSTALL_DIR="$(cd "$(dirname "$0")" && pwd -P)"
 
 # Check if the system is macOS
 if [[ "$(uname)" == "Darwin" ]]; then
+    LAUNCH_AGENT_PLIST="$HOME/Library/LaunchAgents/openblock.cc.openblockExternalResource.setenv.plist"
 
-    # Path to the Launch Agent plist file
-    LAUNCH_AGENT_PLIST=/Library/LaunchAgents/openblock.cc.openblockExternalResource.setenv.plist
-
-    # Create Launch Agent plist file
-    mkdir -p $(dirname "$LAUNCH_AGENT_PLIST")
+    mkdir -p "$(dirname "$LAUNCH_AGENT_PLIST")"
     cat <<EOF > "$LAUNCH_AGENT_PLIST"
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -34,35 +32,20 @@ if [[ "$(uname)" == "Darwin" ]]; then
     </array>
     <key>RunAtLoad</key>
     <true/>
-    <key>KeepAlive</key>
-    <false/>
 </dict>
 </plist>
 EOF
 
-    # Display a dialog prompting the user to restart the system
-    osascript <<EOF
-tell application "System Events"
-    activate
-    display dialog "The installation is complete. To apply all changes, please restart your computer." buttons {"Restart Now", "Later"} default button "Later" with icon caution
-    set userChoice to button returned of result
-    if userChoice is "Restart Now" then
-        tell application "System Events" to restart
-    end if
-end tell
-EOF
-
+    launchctl setenv OPENBLOCK_EXTERNAL_RESOURCES "$INSTALL_DIR"
+    echo
+    echo "Environment variable OPENBLOCK_EXTERNAL_RESOURCES has been set to: $INSTALL_DIR"
 else
     display_restart_dialog() {
-        zenity --question --text="The installation is complete. To apply all changes, please restart your computer." \
-        --title="Restart Required" --ok-label="Restart Now" --cancel-label="Later" --width=400
-
-        if [ $? -eq 0 ]; then
-            # User clicked "Restart Now"
+        echo
+        echo "The installation is complete. To make the environment variable effective, please restart your computer"
+        read -p "Do you want to restart now? [y/N]: " choice
+        if [[ "$choice" =~ ^[Yy]$ ]]; then
             sudo shutdown -r now
-        else
-            # User clicked "Later"
-            echo "You chose to restart later."
         fi
     }
 
@@ -76,14 +59,18 @@ else
     sudo bash -c "echo '$ENVIRONMENT_VARIABLE' > $PROFILE_FILE"
     sudo chmod +x "$PROFILE_FILE"
 
-    display_restart_dialog
+    if [[ $interactive_mode == true ]]; then
+        display_restart_dialog
+    else
+        echo
+        echo "The installation is complete. To apply all changes, please reboot or log out and log in again for the changes to take effect."
+    fi
 fi
 
 echo
-echo -e "Installation completed in $INSTALL_DIR"
+echo "Installation completed in $INSTALL_DIR"
 
-# Optional: User interaction part
-if [[ $interactive_mode == true ]]; then
+if [[ "$interactive_mode" == true && "$(uname)" == "Darwin" ]]; then
     echo "Press Enter to exit..."
     read -r
 fi

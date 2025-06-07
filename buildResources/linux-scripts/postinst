@@ -5,7 +5,7 @@ INSTALL_DIR="/opt/OpenBlockExternalResources"
 SETUP_SCRIPT="$INSTALL_DIR/setup.sh"
 
 if [ -f "$SETUP_SCRIPT" ] && [ -x "$SETUP_SCRIPT" ]; then
-    "$SETUP_SCRIPT"
+    "$SETUP_SCRIPT" --non-interactive
 else
     echo "Setup script not found or not executable: $SETUP_SCRIPT"
 fi
