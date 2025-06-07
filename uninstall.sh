@@ -22,8 +22,7 @@ if [[ "$(uname)" == "Darwin" ]]; then
         echo "LaunchAgent plist file not found: $LAUNCH_AGENT_PLIST"
     fi
 
-    # Unset the environment variable for current session
-    echo "Unsetting environment variable OPENBLOCK_EXTERNAL_RESOURCES for current session"
+    echo "Unsetting environment variable OPENBLOCK_EXTERNAL_RESOURCES"
     launchctl unsetenv OPENBLOCK_EXTERNAL_RESOURCES
 
     echo
