@@ -15,3 +15,5 @@ Source: "../*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createalls
 [Run]
 Filename: "{app}\setup.bat";
 
+[UninstallRun]
+Filename: "{app}\uninstall.bat"; Flags: runhidden runasoriginaluser; RunOnceId: cleanup_openblock_env

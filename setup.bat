@@ -22,7 +22,7 @@ echo %INSTALL_DIR%
 :: Set env
 setx /m OPENBLOCK_EXTERNAL_RESOURCES "%INSTALL_DIR%"
 
-echo OPENBLOCK_EXTERNAL_RESOURCES has been set to: "%INSTALL_DIR%"
+echo Environment variable OPENBLOCK_EXTERNAL_RESOURCES has been set to: "%INSTALL_DIR%"
 echo.
 echo Installation completed.
 echo Press any key to exit...

@@ -1,0 +1,20 @@
+#!/bin/bash
+
+set -e
+
+INSTALL_DIR="/opt/OpenBlockExternalResources"
+UNINSTALL_SCRIPT="$INSTALL_DIR/uninstall.sh"
+
+case "$1" in
+  remove|purge)
+    if [ -f "$UNINSTALL_SCRIPT" ] && [ -x "$UNINSTALL_SCRIPT" ]; then
+        "UNINSTALL_SCRIPT"
+    else
+        echo "Uninstall script not found or not executable: $UNINSTALL_SCRIPT"
+    fi
+    ;;
+  *)
+    ;;
+esac
+
+exit 0
