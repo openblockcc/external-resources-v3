@@ -120,7 +120,7 @@ jobs:
       - name: Build Installer
         shell: powershell
         run: |
-            & "C:\Program Files (x86)\Inno Setup 5\ISCC.exe" /dVersion="${{ steps.get-version.outputs.VERSION }}" "./buildResources/setup.iss"
+            & "C:\Program Files (x86)\Inno Setup 5\ISCC.exe" /dVERSION="${{ steps.get-version.outputs.VERSION }}" "./buildResources/setup.iss"
 
       - name: Upload to Release
         uses: xresloader/upload-to-github-release@v1
@@ -166,7 +166,7 @@ jobs:
           echo ::set-output name=VERSION::$version
 
       - name: Build Installer
-        run: ./buildResources/build-deb.sh -v"${{ steps.get-version.outputs.VERSION }}"
+        run: ./buildResources/build-deb.sh VERSION="${{ steps.get-version.outputs.VERSION }}"
 
       - name: Upload to Release
         uses: xresloader/upload-to-github-release@v1

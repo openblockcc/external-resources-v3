@@ -3,10 +3,10 @@
 
 [Setup]
 AppName=OpenBlock External Resources Installer
-AppVersion={#Version}
+AppVersion={#VERSION}
 DefaultDirName=C:\OpenBlockExternalResources
 OutputDir=../dist
-OutputBaseFilename=OpenBlock-External-Resources-v{#Version}
+OutputBaseFilename=OpenBlock-External-Resources-v{#VERSION}
 PrivilegesRequired=lowest
 
 [Files]
