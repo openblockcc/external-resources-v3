@@ -37,41 +37,39 @@ if [[ "$(uname)" == "Darwin" ]]; then
 EOF
 
     launchctl setenv OPENBLOCK_EXTERNAL_RESOURCES "$INSTALL_DIR"
+
     echo "Environment variable OPENBLOCK_EXTERNAL_RESOURCES has been set to: $INSTALL_DIR"
+    echo
+    echo "Installation completed."
+
+    if [[ "$interactive_mode" == true ]]; then
+        echo "Press Enter to exit..."
+        read -r
+    fi
 else
-    display_restart_dialog() {
-        echo
-        echo "The installation is complete. To make the environment variable effective, please restart your computer"
+    PAM_ENV_FILE="$HOME/.pam_environment"
+    TEMP_FILE="$(mktemp)"
+
+    if [[ -f "$PAM_ENV_FILE" ]]; then
+        grep -v '^OPENBLOCK_EXTERNAL_RESOURCES' "$PAM_ENV_FILE" > "$TEMP_FILE"
+    else
+        touch "$TEMP_FILE"
+    fi
+
+    echo "OPENBLOCK_EXTERNAL_RESOURCES=$INSTALL_DIR" >> "$TEMP_FILE"
+
+    mv "$TEMP_FILE" "$PAM_ENV_FILE"
+
+    echo "Environment variable OPENBLOCK_EXTERNAL_RESOURCES has been set to: $INSTALL_DIR"
+    echo
+    echo "Installation completed. To apply the environment variable, please reboot or log out and log back in."
+
+    if [[ "$interactive_mode" == true ]]; then
         read -p "Do you want to restart now? [y/N]: " choice
         if [[ "$choice" =~ ^[Yy]$ ]]; then
             sudo shutdown -r now
         fi
-    }
-
-    PROFILE_FILE="/etc/profile.d/openblock-external-resource-setenv.sh"
-    ENVIRONMENT_VARIABLE="export OPENBLOCK_EXTERNAL_RESOURCES=\"$INSTALL_DIR\""
-
-    if [ -f "$PROFILE_FILE" ]; then
-        sudo rm "$PROFILE_FILE"
     fi
-
-    sudo bash -c "echo '$ENVIRONMENT_VARIABLE' > $PROFILE_FILE"
-    sudo chmod +x "$PROFILE_FILE"
-
-    if [[ $interactive_mode == true ]]; then
-        display_restart_dialog
-    else
-        echo
-        echo "The installation is complete. To apply all changes, please reboot or log out and log in again for the changes to take effect."
-    fi
-fi
-
-echo
-echo "Installation completed."
-
-if [[ "$interactive_mode" == true && "$(uname)" == "Darwin" ]]; then
-    echo "Press Enter to exit..."
-    read -r
 fi
 
 exit 0
